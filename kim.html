@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEVERSE X | Created by Oneth Rathsara</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pureBlack: '#030303',
+                        deepNavy: '#080D1A',
+                        electricBlue: '#00A8FF',
+                        neonCyan: '#00F5FF',
+                        purpleCustom: '#8B5CF6',
+                        redCustom: '#FF1744',
+                        goldCustom: '#FFD700',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons & Google Fonts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', 'Noto Sans Sinhala', sans-serif;
+            background-color: #030303;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(8, 13, 26, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 245, 255, 0.15);
+        }
+        .glow-cyan { box-shadow: 0 0 25px rgba(0, 245, 255, 0.25); }
+        .glow-blue { box-shadow: 0 0 25px rgba(0, 168, 255, 0.25); }
+        .glow-purple { box-shadow: 0 0 25px rgba(139, 92, 246, 0.25); }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #030303; }
+        ::-webkit-scrollbar-thumb { background: #080D1A; border-radius: 3px; border: 1px solid rgba(0, 245, 255, 0.3); }
+        ::-webkit-scrollbar-thumb:hover { background: #00F5FF; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+        @keyframes pulseGlow { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; filter: drop-shadow(0 0 15px #00F5FF); } }
+        .animate-glow { animation: pulseGlow 3s infinite; }
+        @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(0,245,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s infinite linear;
+            border-radius: 1rem;
+        }
+        @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .toast-item { animation: toastIn 0.3s ease; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { border: 3px solid rgba(0,245,255,0.15); border-top-color: #00F5FF; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .badge-si { font-family: 'Noto Sans Sinhala', 'Outfit', sans-serif; }
+    </style>
+<base target="_blank">
+</head>
+<body class="bg-pureBlack text-white antialiased selection:bg-neonCyan selection:text-pureBlack">
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[100] space-y-3 w-80 max-w-[90vw]"></div>
+
+    <!-- BACKGROUND PARTICLES & AMBIENT GLOW -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-electricBlue/10 rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/3 -right-40 w-96 h-96 bg-purpleCustom/10 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-neonCyan/10 rounded-full blur-[140px]"></div>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-neonCyan/20 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo & Creator -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-electricBlue to-neonCyan flex items-center justify-center glow-cyan">
+                    <i data-lucide="play" class="w-5 h-5 text-pureBlack fill-pureBlack"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-neonCyan via-electricBlue to-white bg-clip-text text-transparent">CINEVERSE X</span>
+                    <p class="text-[10px] text-neonCyan/70 tracking-widest uppercase font-semibold">Created by Oneth Rathsara</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center space-x-6 text-sm font-medium">
+                <button onclick="app.switchTab('home')" class="nav-link text-neonCyan transition hover:text-neonCyan flex items-center gap-1.5" data-target="home">
+                    <i data-lucide="film" class="w-4 h-4"></i> Home
+                </button>
+                <button onclick="app.switchTab('search')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="search">
+                    <i data-lucide="search" class="w-4 h-4"></i> Explore
+                </button>
+                <button onclick="app.switchTab('cinesubz')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="cinesubz">
+                    <i data-lucide="clapperboard" class="w-4 h-4 text-emerald-400"></i> Cinesubz Hub
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-400/20 text-emerald-300 text-[9px] font-black uppercase tracking-wider">Live API</span>
+                </button>
+                <button onclick="app.switchTab('ai')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="ai">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i> CINE AI
+                </button>
+                <button onclick="app.switchTab('sources')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="sources">
+                    <i data-lucide="globe" class="w-4 h-4 text-electricBlue"></i> Movie Hubs
+                </button>
+                <button onclick="app.switchTab('watchlist')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="watchlist">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i> Watchlist
+                    <span id="watchlist-count" class="hidden px-1.5 py-0.5 rounded-full bg-neonCyan text-pureBlack text-[9px] font-black">0</span>
+                </button>
+                <button onclick="app.switchTab('vip')" class="nav-link text-gray-300 hover:text-goldCustom transition flex items-center gap-1.5" data-target="vip">
+                    <i data-lucide="crown" class="w-4 h-4 text-goldCustom"></i> VIP Club
+                </button>
+                <button onclick="app.switchTab('admin')" class="nav-link text-gray-300 hover:text-purpleCustom transition flex items-center gap-1.5" data-target="admin">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i> Admin
+                </button>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="flex items-center space-x-3">
+                <button onclick="app.toggleLang()" class="px-2.5 py-1 rounded-lg border border-neonCyan/30 text-xs font-semibold hover:bg-neonCyan/10 transition badge-si">
+                    <span id="lang-label">EN / සිංහල</span>
+                </button>
+                <button onclick="app.openAuthModal()" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold text-sm hover:glow-cyan transition">
+                    <i data-lucide="user" class="w-4 h-4"></i> <span id="auth-btn-text">Sign In</span>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button onclick="app.toggleMobileMenu()" class="lg:hidden p-2 text-neonCyan">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU MODAL -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-pureBlack/95 backdrop-blur-2xl flex flex-col justify-center items-center space-y-5 hidden lg:hidden overflow-y-auto py-24">
+        <button onclick="app.toggleMobileMenu()" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-white">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <button onclick="app.switchTab('home'); app.toggleMobileMenu();" class="text-xl font-bold hover:text-neonCyan">Home</button>
+        <button onclick="app.switchTab('search'); app.toggleMobileMenu();" class="text-xl font-bold hover:text-neonCyan">Explore & Search</button>
+        <button onclick="app.switchTab('cinesubz'); app.toggleMobileMenu();" class="text-xl font-bold text-emerald-400">Cinesubz Hub (Live API)</button>
+        <button onclick="app.switchTab('ai'); app.toggleMobileMenu();" class="text-xl font-bold text-neonCyan">CINE AI Assistant</button>
+        <button onclick="app.switchTab('sources'); app.toggleMobileMenu();" class="text-xl font-bold text-electricBlue">Movie Hubs (Subz/LK)</button>
+        <button onclick="app.switchTab('watchlist'); app.toggleMobileMenu();" class="text-xl font-bold hover:text-neonCyan">Watchlist</button>
+        <button onclick="app.switchTab('vip'); app.toggleMobileMenu();" class="text-xl font-bold text-goldCustom">VIP Membership</button>
+        <button onclick="app.switchTab('admin'); app.toggleMobileMenu();" class="text-xl font-bold text-purpleCustom">Admin Dashboard</button>
+        <button onclick="app.openAuthModal(); app.toggleMobileMenu();" class="px-8 py-3 rounded-xl bg-neonCyan text-pureBlack font-bold">Sign In / Register</button>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="relative z-10 pt-20 pb-24">
+
+        <!-- ================= TAB 1: HOME ================= -->
+        <section id="tab-home" class="tab-content space-y-12">
+            <!-- Hero Spotlight Section -->
+            <div id="hero-section" class="relative min-h-[85vh] flex items-center justify-center px-4 sm:px-8 overflow-hidden">
+                <div class="absolute inset-0 z-0">
+                    <img id="hero-bg" src="https://image.tmdb.org/t/p/original/bKxiLgSV4YIs6XW58bN60r1bUaE.jpg" class="w-full h-full object-cover filter brightness-50 scale-105 transition-all duration-1000" alt="Hero Backdrop">
+                    <div class="absolute inset-0 bg-gradient-to-t from-pureBlack via-pureBlack/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-pureBlack via-transparent to-pureBlack"></div>
+                </div>
+                <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-12">
+                    <div class="space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonCyan/10 border border-neonCyan/40 text-neonCyan text-xs font-semibold uppercase tracking-wider glow-cyan">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> <span id="hero-badge">#1 Trending Today Worldwide</span>
+                        </div>
+                        <h1 id="hero-title" class="text-4xl sm:text-6xl font-black tracking-tight text-white drop-shadow-lg transition-all duration-700">Avatar: The Way of Water</h1>
+                        <p id="hero-overview" class="text-gray-300 text-sm sm:text-base line-clamp-3 leading-relaxed max-w-xl">
+                            Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na'vi race to protect their home.
+                        </p>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="flex items-center gap-1 text-goldCustom font-bold"><i data-lucide="star" class="w-4 h-4 fill-goldCustom"></i> <span id="hero-rating">7.8</span>/10</span>
+                            <span class="text-gray-400">|</span>
+                            <span id="hero-year" class="text-gray-300">2022</span>
+                            <span class="text-gray-400">|</span>
+                            <span id="hero-genre" class="px-2 py-0.5 rounded bg-electricBlue/20 text-electricBlue text-xs font-semibold">Sci-Fi / Action</span>
+                        </div>
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button id="hero-details-btn" onclick="app.openMovieDetails(76600)" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold flex items-center gap-2 hover:glow-cyan transition">
+                                <i data-lucide="play" class="w-5 h-5 fill-pureBlack"></i> Watch Details
+                            </button>
+                            <button onclick="app.csQuickSearch(document.getElementById('hero-title').innerText)" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-neonCyan text-pureBlack font-bold flex items-center gap-2 hover:glow-cyan transition">
+                                <i data-lucide="clapperboard" class="w-5 h-5"></i> Cinesubz Search (සිංහල උපසිරැසි)
+                            </button>
+                            <button id="hero-download-btn" onclick="app.openDownloadSelector('Avatar: The Way of Water')" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-purpleCustom to-neonCyan text-white font-bold flex items-center gap-2 hover:glow-purple transition">
+                                <i data-lucide="download" class="w-5 h-5"></i> Download Hub
+                            </button>
+                            <button id="hero-watchlist-btn" onclick="app.addToWatchlist(76600)" class="px-6 py-3.5 rounded-xl glass-panel text-white font-semibold flex items-center gap-2 hover:border-neonCyan transition">
+                                <i data-lucide="plus" class="w-5 h-5 text-neonCyan"></i> Add Watchlist
+                            </button>
+                        </div>
+                        <!-- Hero dot indicators -->
+                        <div id="hero-dots" class="flex items-center gap-2 pt-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Category Carousels -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+
+                <!-- Cinesubz Live Spotlight -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="clapperboard" class="w-6 h-6 text-emerald-400"></i> Cinesubz Live Library
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-400/15 border border-emerald-400/40 text-emerald-300 text-[10px] font-black uppercase tracking-wider">API Connected</span>
+                        </h2>
+                        <button onclick="app.switchTab('cinesubz')" class="text-xs text-neonCyan hover:underline font-semibold">Open Cinesubz Hub</button>
+                    </div>
+                    <div id="cs-home-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                </div>
+
+                <!-- Recently Viewed -->
+                <div id="recent-section" class="hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="history" class="w-6 h-6 text-electricBlue"></i> Recently Viewed
+                        </h2>
+                        <button onclick="app.clearRecent()" class="text-xs text-redCustom hover:underline font-semibold">Clear</button>
+                    </div>
+                    <div id="recent-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                </div>
+
+                <!-- Trending Section -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-neonCyan"></i> Trending Movies
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="trending-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                </div>
+
+                <!-- Popular Movies -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="flame" class="w-6 h-6 text-redCustom"></i> Popular Worldwide
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="popular-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                </div>
+
+                <!-- Top Rated -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="award" class="w-6 h-6 text-goldCustom"></i> Top Rated Masterpieces
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="top-rated-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                </div>
+
+                <!-- Anime Collection -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="zap" class="w-6 h-6 text-purpleCustom"></i> Anime Collection
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: ADVANCED SEARCH & EXPLORE ================= -->
+        <section id="tab-search" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="space-y-4">
+                <h1 class="text-3xl font-black bg-gradient-to-r from-neonCyan to-white bg-clip-text text-transparent">Super Advanced Search & Discovery</h1>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="absolute left-4 top-3.5 w-5 h-5 text-neonCyan"></i>
+                        <input type="text" id="search-input" oninput="app.handleSearchInput(event)" placeholder="Search by title, director, actor, genre..." class="w-full pl-12 pr-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-400 focus:outline-none focus:border-neonCyan transition">
+                    </div>
+                    <select id="genre-filter" onchange="app.triggerSearch()" class="px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white focus:outline-none focus:border-neonCyan transition">
+                        <option value="">All Genres</option>
+                        <option value="28">Action</option>
+                        <option value="12">Adventure</option>
+                        <option value="16">Animation</option>
+                        <option value="35">Comedy</option>
+                        <option value="18">Drama</option>
+                        <option value="27">Horror</option>
+                        <option value="878">Sci-Fi</option>
+                    </select>
+                    <select id="sort-filter" onchange="app.triggerSearch()" class="px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white focus:outline-none focus:border-neonCyan transition">
+                        <option value="popularity.desc">Most Popular</option>
+                        <option value="vote_average.desc">Highest Rated</option>
+                        <option value="primary_release_date.desc">Latest Release</option>
+                    </select>
+                </div>
+            </div>
+            <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <div class="col-span-full text-center py-12 text-gray-400">Start typing to explore the cinematic universe...</div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: CINESUBZ HUB (LIVE API) ================= -->
+        <section id="tab-cinesubz" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/40 text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Cinesubz Live API • Sinhala Subtitles
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-black bg-gradient-to-r from-emerald-400 via-neonCyan to-white bg-clip-text text-transparent">Cinesubz Hub — Direct සිංහල උපසිරැසි Downloads</h1>
+                <p class="text-gray-400 text-sm">Search the live Cinesubz library. Movies & TV Shows with real download links — zt-links auto-resolve කරලා direct link එකම ගන්න පුළුවන්.</p>
+            </div>
+
+            <!-- CS Search Bar -->
+            <div class="glass-panel rounded-3xl border border-emerald-400/25 p-4 sm:p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="absolute left-4 top-3.5 w-5 h-5 text-emerald-400"></i>
+                        <input type="text" id="cs-search-input" onkeydown="if(event.key==='Enter')app.csSearch()" placeholder="Search Cinesubz... e.g. Avatar, Spider-Man, KGF" class="w-full pl-12 pr-4 py-3 rounded-xl bg-pureBlack/60 border border-emerald-400/30 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-400 transition">
+                    </div>
+                    <div class="flex items-center gap-2 bg-pureBlack/60 border border-emerald-400/30 rounded-xl p-1.5">
+                        <label class="cursor-pointer px-4 py-2 rounded-lg text-xs font-bold transition has-[:checked]:bg-emerald-400 has-[:checked]:text-pureBlack text-gray-300">
+                            <input type="radio" name="cs-type" value="movie" class="hidden" checked onchange="app.csTypeChange()"> Movies
+                        </label>
+                        <label class="cursor-pointer px-4 py-2 rounded-lg text-xs font-bold transition has-[:checked]:bg-electricBlue has-[:checked]:text-pureBlack text-gray-300">
+                            <input type="radio" name="cs-type" value="tv" class="hidden" onchange="app.csTypeChange()"> TV Shows
+                        </label>
+                    </div>
+                    <button onclick="app.csSearch()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-neonCyan text-pureBlack font-black text-sm hover:glow-cyan transition flex items-center justify-center gap-2">
+                        <i data-lucide="zap" class="w-4 h-4"></i> Search
+                    </button>
+                </div>
+                <!-- Quick chips -->
+                <div class="flex gap-2 overflow-x-auto hide-scrollbar">
+                    <button onclick="app.csQuickChip('Avatar')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap">Avatar</button>
+                    <button onclick="app.csQuickChip('Spider-Man')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap">Spider-Man</button>
+                    <button onclick="app.csQuickChip('John Wick')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap">John Wick</button>
+                    <button onclick="app.csQuickChip('KGF')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap">KGF</button>
+                    <button onclick="app.csQuickChip('Pushpa')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap">Pushpa</button>
+                    <button onclick="app.csQuickChip('Avengers')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap">Avengers</button>
+                    <button onclick="app.csQuickChip('Salaar')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap">Salaar</button>
+                </div>
+            </div>
+
+            <!-- CS Results -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-200 flex items-center gap-2"><i data-lucide="list" class="w-5 h-5 text-emerald-400"></i> <span id="cs-results-label">Results appear here</span></h2>
+                    <span id="cs-results-count" class="text-xs text-gray-500 font-semibold"></span>
+                </div>
+                <div id="cs-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    <div class="col-span-full text-center py-16 text-gray-500 space-y-3">
+                        <i data-lucide="clapperboard" class="w-12 h-12 mx-auto text-emerald-400/40"></i>
+                        <p>Search karanna — live Cinesubz results මෙතන පෙන්නන්නම් 🎬</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: CINE AI ASSISTANT ================= -->
+        <section id="tab-ai" class="tab-content max-w-4xl mx-auto px-4 hidden">
+            <div class="glass-panel rounded-3xl border border-neonCyan/30 overflow-hidden flex flex-col h-[75vh] glow-cyan">
+                <!-- AI Header -->
+                <div class="p-6 border-b border-neonCyan/20 flex items-center justify-between bg-pureBlack/40">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-electricBlue to-neonCyan flex items-center justify-center animate-glow">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-pureBlack"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-neonCyan">CINE AI Assistant</h2>
+                            <p class="text-xs text-gray-400">Futuristic Movie Recommendation & Discovery Brain</p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-neonCyan/10 text-neonCyan text-xs font-semibold">Online</span>
+                </div>
+                <!-- Chat Messages Area -->
+                <div id="ai-chat-box" class="flex-1 p-6 overflow-y-auto space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-neonCyan/20 flex items-center justify-center shrink-0">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i>
+                        </div>
+                        <div class="p-4 rounded-2xl glass-panel max-w-lg text-sm text-gray-200 border border-neonCyan/20">
+                            Hello! I am <strong>CINE AI</strong>, created by Oneth Rathsara. Tell me your mood, favorite genre, or what kind of cinematic experience you are looking for today, and I will recommend the ultimate movie for you! 🎬
+                        </div>
+                    </div>
+                </div>
+                <!-- AI Quick Prompts -->
+                <div class="px-6 py-2 flex gap-2 overflow-x-auto hide-scrollbar">
+                    <button onclick="app.sendAiPrompt('Recommend a mind-bending sci-fi movie')" class="px-3 py-1.5 rounded-xl border border-neonCyan/30 text-xs text-neonCyan hover:bg-neonCyan/10 whitespace-nowrap">🌌 Mind-bending Sci-Fi</button>
+                    <button onclick="app.sendAiPrompt('Give me a high-octane action thriller')" class="px-3 py-1.5 rounded-xl border border-neonCyan/30 text-xs text-neonCyan hover:bg-neonCyan/10 whitespace-nowrap">🔥 Action Thriller</button>
+                    <button onclick="app.sendAiPrompt('Suggest a heartwarming animated masterpiece')" class="px-3 py-1.5 rounded-xl border border-neonCyan/30 text-xs text-neonCyan hover:bg-neonCyan/10 whitespace-nowrap">✨ Animated Masterpiece</button>
+                    <button onclick="app.sendAiPrompt('සිංහල උපසිරැසි එක්ක new movie එකක් ඕනේ')" class="px-3 py-1.5 rounded-xl border border-emerald-400/30 text-xs text-emerald-300 hover:bg-emerald-400/10 whitespace-nowrap badge-si">🇱🇰 සිංහල උපසිරැසි</button>
+                </div>
+                <!-- AI Input Box -->
+                <div class="p-4 border-t border-neonCyan/20 bg-pureBlack/60 flex items-center space-x-3">
+                    <input type="text" id="ai-input" onkeydown="if(event.key==='Enter')app.handleAiSubmit()" placeholder="Ask CINE AI anything about movies..." class="flex-1 px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-500 focus:outline-none focus:border-neonCyan text-sm">
+                    <button onclick="app.handleAiSubmit()" class="p-3 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold hover:glow-cyan transition">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: MOVIE HUBS & SITES ================= -->
+        <section id="tab-sources" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <h1 class="text-3xl sm:text-4xl font-black bg-gradient-to-r from-electricBlue to-neonCyan bg-clip-text text-transparent">Connected Movie Download Hubs</h1>
+                <p class="text-gray-400 text-sm">Click any platform below to instantly search and download movies directly from Sri Lanka's top Sinhala subtitle and movie sites.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Cinesubz (API powered) -->
+                <div onclick="app.switchTab('cinesubz')" class="glass-panel p-6 rounded-2xl border border-emerald-400/40 hover:border-emerald-400 cursor-pointer group transition duration-300 hover:scale-105 space-y-3 relative overflow-hidden">
+                    <span class="absolute top-0 right-0 bg-emerald-400 text-pureBlack text-[9px] font-black px-3 py-0.5 rounded-bl-lg uppercase">API Live</span>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-400/20 flex items-center justify-center text-emerald-300 group-hover:glow-cyan transition">
+                        <i data-lucide="clapperboard" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Cinesubz Hub</h3>
+                    <p class="text-xs text-gray-400">Live API Search + Auto zt-link Resolve — in-app එකෙන්ම</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-emerald-300 font-semibold">Open Inside App <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <!-- Cinesubz direct -->
+                <div onclick="window.open('https://cinesubz.lk', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/30 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition">
+                        <i data-lucide="film" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Cinesubz.lk</h3>
+                    <p class="text-xs text-gray-400">Sinhala Subtitled Movies & Series Hub (Official Site)</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <!-- Cineru -->
+                <div onclick="window.open('https://cineru.lk', '_blank')" class="glass-panel p-6 rounded-2xl border border-electricBlue/30 hover:border-electricBlue cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-electricBlue/20 flex items-center justify-center text-electricBlue group-hover:glow-blue transition">
+                        <i data-lucide="film" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Cineru.lk</h3>
+                    <p class="text-xs text-gray-400">Latest Hollywood & Tamil Movies with Sinhala Subtitles</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-electricBlue font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <!-- SinhalaSub -->
+                <div onclick="window.open('https://sinhalasub.lk', '_blank')" class="glass-panel p-6 rounded-2xl border border-purpleCustom/30 hover:border-purpleCustom cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-purpleCustom/20 flex items-center justify-center text-purpleCustom group-hover:glow-purple transition">
+                        <i data-lucide="film" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">SinhalaSub</h3>
+                    <p class="text-xs text-gray-400">Popular Streaming & Direct Download Portal</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-purpleCustom font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <!-- LKSub -->
+                <div onclick="window.open('https://lksub.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-goldCustom/30 hover:border-goldCustom cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-goldCustom/20 flex items-center justify-center text-goldCustom transition">
+                        <i data-lucide="film" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">LKSub</h3>
+                    <p class="text-xs text-gray-400">Exclusive Subtitles and Movie Collections</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-goldCustom font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <!-- DinkaMovies -->
+                <div onclick="window.open('https://dinkamovies.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-redCustom/30 hover:border-redCustom cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-redCustom/20 flex items-center justify-center text-redCustom transition">
+                        <i data-lucide="film" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">DinkaMovies</h3>
+                    <p class="text-xs text-gray-400">Fast Direct Movie Download Hub</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-redCustom font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <!-- DubLK -->
+                <div onclick="window.open('https://dublk.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/30 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan transition">
+                        <i data-lucide="mic" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">DubLK</h3>
+                    <p class="text-xs text-gray-400">Sinhala Dubbed Movies & Animation Cartoons</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <!-- PupilsVideoBlogspot -->
+                <div onclick="window.open('https://pupilsvideoblogspot.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-electricBlue/30 hover:border-electricBlue cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-electricBlue/20 flex items-center justify-center text-electricBlue transition">
+                        <i data-lucide="video" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">PupilsVideoBlogspot</h3>
+                    <p class="text-xs text-gray-400">Special Video Content & Movie Archive</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-electricBlue font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 6: WATCHLIST ================= -->
+        <section id="tab-watchlist" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-black bg-gradient-to-r from-neonCyan to-white bg-clip-text text-transparent">My Personal Watchlist</h1>
+                    <p class="text-gray-400 text-sm mt-1">Saved movies synchronized securely with your account.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="app.exportWatchlist()" class="px-4 py-2 rounded-xl border border-neonCyan/40 text-neonCyan text-xs font-bold hover:bg-neonCyan/10 transition flex items-center gap-1.5"><i data-lucide="download" class="w-3.5 h-3.5"></i> Export</button>
+                    <button onclick="app.clearWatchlist()" class="px-4 py-2 rounded-xl border border-redCustom/40 text-redCustom text-xs font-bold hover:bg-redCustom/10 transition">Clear All</button>
+                </div>
+            </div>
+            <div id="watchlist-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <!-- Dynamically populated watchlist items -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 7: VIP MEMBERSHIP ================= -->
+        <section id="tab-vip" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 hidden">
+            <div class="text-center max-w-2xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-goldCustom/10 border border-goldCustom/40 text-goldCustom text-xs font-bold uppercase tracking-wider glow-purple">
+                    <i data-lucide="crown" class="w-4 h-4"></i> CINEVERSE X VIP CLUB
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-black text-white">Unlock Ultimate Cinematic Power</h1>
+                <p class="text-gray-400 text-sm sm:text-base">Experience 4K HDR streaming, zero ads, exclusive AI cinematic director cuts, and custom neon themes crafted by Oneth Rathsara.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Free Plan -->
+                <div class="glass-panel p-8 rounded-3xl border border-gray-800 space-y-6 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-300">Free Cadet</h3>
+                        <div class="text-3xl font-black">$0 <span class="text-xs text-gray-500 font-normal">/ forever</span></div>
+                        <ul class="space-y-3 text-sm text-gray-400">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-neonCyan"></i> Standard 1080p Streaming</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-neonCyan"></i> Basic Watchlist Sync</li>
+                            <li class="flex items-center gap-2 text-gray-600"><i data-lucide="x" class="w-4 h-4"></i> AI Cinematic Director Cuts</li>
+                        </ul>
+                    </div>
+                    <button class="w-full py-3 rounded-xl border border-neonCyan/30 text-neonCyan font-bold text-sm hover:bg-neonCyan/10 transition">Current Plan</button>
+                </div>
+                <!-- Premium Plan -->
+                <div class="glass-panel p-8 rounded-3xl border border-neonCyan space-y-6 flex flex-col justify-between glow-cyan relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-neonCyan text-pureBlack text-[10px] font-black px-4 py-1 rounded-bl-xl uppercase tracking-wider">Most Popular</div>
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-neonCyan">Cyber Premium</h3>
+                        <div class="text-3xl font-black text-white">$9.99 <span class="text-xs text-gray-400 font-normal">/ month</span></div>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-neonCyan"></i> Uncompressed 4K HDR Streaming</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-neonCyan"></i> Unlimited CINE AI Assistant Access</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-neonCyan"></i> Exclusive Neon Profiles & Badges</li>
+                        </ul>
+                    </div>
+                    <button onclick="app.toast('Redirecting to secure checkout gateway...','info')" class="w-full py-3 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold text-sm hover:glow-cyan transition">Upgrade Now</button>
+                </div>
+                <!-- VIP Plan -->
+                <div class="glass-panel p-8 rounded-3xl border border-goldCustom space-y-6 flex flex-col justify-between glow-purple">
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-goldCustom">VIP Overlord</h3>
+                        <div class="text-3xl font-black text-white">$24.99 <span class="text-xs text-gray-400 font-normal">/ month</span></div>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-goldCustom"></i> IMAX Enhanced 8K Streaming</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-goldCustom"></i> Early Access to Creator Previews</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-goldCustom"></i> Direct Chat with Oneth Rathsara</li>
+                        </ul>
+                    </div>
+                    <button onclick="app.toast('Redirecting to secure VIP checkout...','info')" class="w-full py-3 rounded-xl bg-gradient-to-r from-goldCustom to-amber-500 text-pureBlack font-bold text-sm hover:glow-purple transition">Join VIP Club</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 8: ADMIN DASHBOARD ================= -->
+        <section id="tab-admin" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-black bg-gradient-to-r from-purpleCustom to-neonCyan bg-clip-text text-transparent">Admin Control Dashboard</h1>
+                    <p class="text-gray-400 text-sm mt-1">Platform telemetry, user moderation, and content management.</p>
+                </div>
+                <div class="flex gap-2">
+                    <span class="px-3 py-1.5 rounded-lg glass-panel text-xs font-semibold text-emerald-400 border border-emerald-400/40">Cinesubz API: <span id="admin-api-status">Checking...</span></span>
+                    <span class="px-3 py-1.5 rounded-lg glass-panel text-xs font-semibold text-purpleCustom border border-purpleCustom/40">Secure Node: Online</span>
+                </div>
+            </div>
+            <!-- Metrics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-panel p-6 rounded-2xl border border-neonCyan/20 space-y-2">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium"><span>Total Registered Users</span> <i data-lucide="users" class="w-4 h-4 text-neonCyan"></i></div>
+                    <div class="text-3xl font-black text-white">48,291</div>
+                    <div class="text-xs text-emerald-400 font-semibold">+14.2% this week</div>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-electricBlue/20 space-y-2">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium"><span>Catalog Movies</span> <i data-lucide="film" class="w-4 h-4 text-electricBlue"></i></div>
+                    <div class="text-3xl font-black text-white">12,450</div>
+                    <div class="text-xs text-emerald-400 font-semibold">+320 added today</div>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-purpleCustom/20 space-y-2">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium"><span>Active VIP Subscriptions</span> <i data-lucide="crown" class="w-4 h-4 text-purpleCustom"></i></div>
+                    <div class="text-3xl font-black text-white">3,184</div>
+                    <div class="text-xs text-emerald-400 font-semibold">+8.5% growth</div>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-goldCustom/20 space-y-2">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium"><span>Daily Stream Traffic</span> <span class="text-xs text-goldCustom font-bold">TB</span></div>
+                    <div class="text-3xl font-black text-white">148.2 TB</div>
+                    <div class="text-xs text-emerald-400 font-semibold">Optimal Bandwidth</div>
+                </div>
+            </div>
+            <!-- Content Management Quick Controls -->
+            <div class="glass-panel p-6 rounded-3xl border border-neonCyan/30 space-y-6">
+                <h3 class="text-xl font-bold text-white">Content Management & Moderation</h3>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="app.toast('Opening Add Movie Studio...','info')" class="px-5 py-2.5 rounded-xl bg-neonCyan text-pureBlack font-bold text-xs flex items-center gap-2 hover:glow-cyan transition">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add New Movie
+                    </button>
+                    <button onclick="app.toast('Flushing server cache...','success')" class="px-5 py-2.5 rounded-xl glass-panel border border-neonCyan/30 text-neonCyan font-bold text-xs flex items-center gap-2 hover:bg-neonCyan/10 transition">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Flush CDN Cache
+                    </button>
+                    <button onclick="app.checkCsApi()" class="px-5 py-2.5 rounded-xl glass-panel border border-emerald-400/30 text-emerald-300 font-bold text-xs flex items-center gap-2 hover:bg-emerald-400/10 transition">
+                        <i data-lucide="activity" class="w-4 h-4"></i> Ping Cinesubz API
+                    </button>
+                    <button onclick="app.toast('Broadcasting system notification to all users...','info')" class="px-5 py-2.5 rounded-xl glass-panel border border-purpleCustom/30 text-purpleCustom font-bold text-xs flex items-center gap-2 hover:bg-purpleCustom/10 transition">
+                        <i data-lucide="bell" class="w-4 h-4"></i> Broadcast Announcement
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= DOWNLOAD SELECTOR MODAL (Multi-Site Selector) ================= -->
+    <div id="download-modal" class="fixed inset-0 z-50 bg-pureBlack/90 backdrop-blur-2xl flex items-center justify-center p-4 hidden" onclick="if(event.target===this)app.closeDownloadSelector()">
+        <div class="glass-panel max-w-lg w-full rounded-3xl border border-neonCyan/40 p-6 sm:p-8 space-y-6 relative glow-cyan max-h-[90vh] overflow-y-auto">
+            <button onclick="app.closeDownloadSelector()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="space-y-2 text-center">
+                <h3 class="text-2xl font-black text-neonCyan">Select Download Portal</h3>
+                <p id="download-movie-title" class="text-sm text-gray-300 font-semibold">Movie Title</p>
+                <p class="text-xs text-gray-400">Choose where you want to download or get subtitles for this movie:</p>
+            </div>
+            <!-- In-app Cinesubz API quick action -->
+            <button onclick="app.csQuickSearch(document.getElementById('download-movie-title').innerText); app.closeDownloadSelector();" class="w-full p-4 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-neonCyan/10 border border-emerald-400/50 hover:border-emerald-400 transition flex items-center justify-between group">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-400/20 flex items-center justify-center text-emerald-300"><i data-lucide="clapperboard" class="w-5 h-5"></i></div>
+                    <div class="text-left">
+                        <p class="text-sm font-black text-emerald-300">Search inside CINEVERSE (Live API)</p>
+                        <p class="text-[10px] text-gray-400">zt-links auto-resolve • direct downloads • no redirect hunting</p>
+                    </div>
+                </div>
+                <i data-lucide="arrow-right" class="w-5 h-5 text-emerald-300 group-hover:translate-x-1 transition"></i>
+            </button>
+            <div id="download-links-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MOVIE DETAILS MODAL (TMDB) ================= -->
+    <div id="movie-modal" class="fixed inset-0 z-50 bg-pureBlack/90 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-6 hidden overflow-y-auto" onclick="if(event.target===this)app.closeMovieDetails()">
+        <div class="glass-panel max-w-4xl w-full rounded-3xl border border-neonCyan/40 overflow-hidden relative max-h-[90vh] flex flex-col glow-cyan">
+            <button onclick="app.closeMovieDetails()" class="absolute top-4 right-4 z-20 p-2 rounded-full glass-panel text-white hover:text-neonCyan transition">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div id="modal-content" class="overflow-y-auto p-6 sm:p-8 space-y-6">
+                <!-- Dynamically populated movie detail information -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= CINESUBZ DETAIL MODAL (LIVE API) ================= -->
+    <div id="cs-modal" class="fixed inset-0 z-50 bg-pureBlack/90 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-6 hidden overflow-y-auto" onclick="if(event.target===this)app.closeCsDetails()">
+        <div class="glass-panel max-w-3xl w-full rounded-3xl border border-emerald-400/40 overflow-hidden relative max-h-[90vh] flex flex-col glow-cyan">
+            <button onclick="app.closeCsDetails()" class="absolute top-4 right-4 z-20 p-2 rounded-full glass-panel text-white hover:text-emerald-300 transition">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div id="cs-modal-content" class="overflow-y-auto p-6 sm:p-8 space-y-6">
+                <!-- Dynamically populated Cinesubz detail information -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= AUTH MODAL ================= -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-pureBlack/90 backdrop-blur-2xl flex items-center justify-center p-4 hidden" onclick="if(event.target===this)app.closeAuthModal()">
+        <div class="glass-panel max-w-md w-full rounded-3xl border border-neonCyan/40 p-8 space-y-6 relative glow-cyan">
+            <button onclick="app.closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-black bg-gradient-to-r from-neonCyan to-white bg-clip-text text-transparent">Welcome to CINEVERSE X</h2>
+                <p class="text-xs text-gray-400">Secure Authentication Portal</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs text-gray-400 font-medium">Email Address</label>
+                    <input type="email" id="auth-email" placeholder="name@domain.com" class="w-full mt-1 px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-600 focus:outline-none focus:border-neonCyan text-sm">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 font-medium">Password</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full mt-1 px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-600 focus:outline-none focus:border-neonCyan text-sm">
+                </div>
+                <button onclick="app.handleAuth()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold text-sm hover:glow-cyan transition">
+                    Sign In / Register
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 left-6 z-40 p-3 rounded-full glass-panel border border-neonCyan/40 text-neonCyan hover:glow-cyan transition hidden">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-neonCyan/20 py-12 text-center text-xs text-gray-500 space-y-4 relative z-10">
+        <div class="flex items-center justify-center space-x-2">
+            <div class="w-6 h-6 rounded-lg bg-neonCyan flex items-center justify-center">
+                <i data-lucide="play" class="w-3 h-3 text-pureBlack fill-pureBlack"></i>
+            </div>
+            <span class="text-white font-bold tracking-wider">CINEVERSE X</span>
+        </div>
+        <p>Created with passion by <span class="text-neonCyan font-semibold">Oneth Rathsara</span>. Powered by TMDB, Cinesubz Live API & Next-Gen Web Technologies.</p>
+        <p>© 2026 CINEVERSE X. All rights reserved.</p>
+    </footer>
+
+    <!-- ================= APPLICATION LOGIC (JAVASCRIPT) ================= -->
+    <script>
+        const TMDB_API_KEY = '8265bd1679663a7ea12ac168da84d2e8'; // Public demo key
+        const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+
+        // ===== CINESUBZ LIVE API (api.chamindu.site) =====
+        const CS_API_BASE = 'https://api.chamindu.site/api/v1/movies/cinesubz';
+        const CS_API_KEY = 'chama_api_3940f6e0594878922f5c67e265cf3198';
+        const CS_SITE = 'https://cinesubz.lk';
+
+        class CineverseApp {
+            constructor() {
+                this.currentTab = 'home';
+                this.watchlist = JSON.parse(localStorage.getItem('cineverse_watchlist')) || [];
+                this.recent = JSON.parse(localStorage.getItem('cineverse_recent')) || [];
+                this.searchTimeout = null;
+                this.isSinhala = false;
+                this.user = JSON.parse(localStorage.getItem('cineverse_user')) || null;
+                this.trendingList = [];
+                this.heroIndex = 0;
+                this.heroTimer = null;
+                this.csType = 'movie';
+                this.init();
+            }
+
+            async init() {
+                lucide.createIcons();
+                this.updateAuthUI();
+                this.updateWatchlistBadge();
+                this.renderSkeletons();
+                this.bindGlobalEvents();
+                await this.loadHomeData();
+                this.renderWatchlist();
+                this.renderRecent();
+                this.loadCsSpotlight();
+            }
+
+            bindGlobalEvents() {
+                // ESC closes any open modal
+                document.addEventListener('keydown', (e) => {
+                    if(e.key === 'Escape') {
+                        this.closeMovieDetails();
+                        this.closeDownloadSelector();
+                        this.closeAuthModal();
+                        this.closeCsDetails();
+                        document.getElementById('mobile-menu').classList.add('hidden');
+                    }
+                });
+                // Back to top visibility
+                window.addEventListener('scroll', () => {
+                    const btn = document.getElementById('back-to-top');
+                    if(window.scrollY > 600) btn.classList.remove('hidden');
+                    else btn.classList.add('hidden');
+                });
+            }
+
+            // ================= UI HELPERS =================
+            toast(message, type = 'info', duration = 3200) {
+                const container = document.getElementById('toast-container');
+                const colors = {
+                    info: 'border-neonCyan/40 text-neonCyan',
+                    success: 'border-emerald-400/40 text-emerald-300',
+                    error: 'border-redCustom/50 text-redCustom',
+                    warn: 'border-goldCustom/50 text-goldCustom'
+                };
+                const icons = { info: 'info', success: 'check-circle-2', error: 'alert-triangle', warn: 'alert-circle' };
+                const el = document.createElement('div');
+                el.className = `toast-item glass-panel border ${colors[type] || colors.info} rounded-2xl px-4 py-3 flex items-start gap-3 text-sm shadow-xl`;
+                el.innerHTML = `<i data-lucide="${icons[type] || 'info'}" class="w-5 h-5 shrink-0 mt-0.5"></i><span class="text-gray-200">${message}</span>`;
+                container.appendChild(el);
+                lucide.createIcons();
+                setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .4s'; setTimeout(() => el.remove(), 400); }, duration);
+            }
+
+            skeletonCards(n = 10) {
+                return Array.from({length: n}).map(() => `
+                    <div class="glass-panel rounded-2xl overflow-hidden border border-neonCyan/10">
+                        <div class="skeleton aspect-[2/3] !rounded-none"></div>
+                        <div class="p-3 space-y-2"><div class="skeleton h-3 w-4/5"></div><div class="skeleton h-2.5 w-1/2"></div></div>
+                    </div>`).join('');
+            }
+
+            renderSkeletons() {
+                ['trending-grid','popular-grid','top-rated-grid','anime-grid','cs-home-grid'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.innerHTML = this.skeletonCards(5);
+                });
+            }
+
+            escapeHtml(str = '') {
+                return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+            }
+
+            jsSafe(str = '') {
+                return String(str).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,' ');
+            }
+
+            // ================= NAVIGATION =================
+            switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+                const target = document.getElementById(`tab-${tabId}`);
+                if(target) target.classList.remove('hidden');
+
+                document.querySelectorAll('.nav-link').forEach(el => {
+                    el.classList.remove('text-neonCyan');
+                    el.classList.add('text-gray-300');
+                    if(el.getAttribute('data-target') === tabId) {
+                        el.classList.add('text-neonCyan');
+                        el.classList.remove('text-gray-300');
+                    }
+                });
+
+                this.currentTab = tabId;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                lucide.createIcons();
+            }
+
+            toggleMobileMenu() {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+                lucide.createIcons();
+            }
+
+            toggleLang() {
+                this.isSinhala = !this.isSinhala;
+                const label = document.getElementById('lang-label');
+                label.innerText = this.isSinhala ? "සිංහල (Active)" : "EN / සිංහල";
+                this.toast(this.isSinhala ? "සිංහල mode සක්‍රීයයි — Cinesubz Hub එකෙන් සිංහල උපසිරැසි movies directly බලන්න පුළුවන් 🇱🇰" : "English language mode active.", 'info');
+            }
+
+            // ================= TMDB =================
+            async fetchTMDB(endpoint) {
+                try {
+                    const res = await fetch(`${TMDB_BASE_URL}${endpoint}?api_key=${TMDB_API_KEY}&language=en-US`);
+                    const data = await res.json();
+                    return data.results || data;
+                } catch(e) {
+                    console.error("TMDB Error:", e);
+                    return [];
+                }
+            }
+
+            async loadHomeData() {
+                const trending = await this.fetchTMDB('/trending/movie/day');
+                const popular = await this.fetchTMDB('/movie/popular');
+                const topRated = await this.fetchTMDB('/movie/top_rated');
+                const anime = await this.fetchTMDB('/discover/movie?with_genres=16');
+
+                this.trendingList = (trending || []).filter(m => m.backdrop_path).slice(0, 6);
+                this.renderMovieGrid('trending-grid', (trending || []).slice(0, 5));
+                this.renderMovieGrid('popular-grid', (popular || []).slice(0, 5));
+                this.renderMovieGrid('top-rated-grid', (topRated || []).slice(0, 5));
+                this.renderMovieGrid('anime-grid', (anime || []).slice(0, 5));
+
+                if (this.trendingList.length > 0) {
+                    this.setHero(0);
+                    this.startHeroRotation();
+                }
+            }
+
+            setHero(index) {
+                const hero = this.trendingList[index];
+                if(!hero) return;
+                this.heroIndex = index;
+                const bg = document.getElementById('hero-bg');
+                bg.style.opacity = '0';
+                setTimeout(() => { bg.src = `https://image.tmdb.org/t/p/original${hero.backdrop_path}`; bg.style.opacity = '1'; }, 300);
+
+                const title = hero.title || hero.name;
+                document.getElementById('hero-title').innerText = title;
+                document.getElementById('hero-overview').innerText = hero.overview || 'No overview available.';
+                document.getElementById('hero-rating').innerText = (hero.vote_average || 0).toFixed(1);
+                document.getElementById('hero-year').innerText = (hero.release_date || hero.first_air_date || '').substring(0, 4) || 'N/A';
+                document.getElementById('hero-badge').innerText = `#${index + 1} Trending Today Worldwide`;
+
+                const detailsBtn = document.getElementById('hero-details-btn');
+                detailsBtn.onclick = () => this.openMovieDetails(hero.id);
+                const dlBtn = document.getElementById('hero-download-btn');
+                dlBtn.onclick = () => this.openDownloadSelector(title);
+                const wlBtn = document.getElementById('hero-watchlist-btn');
+                wlBtn.onclick = () => this.addToWatchlist(hero.id);
+
+                // Dots
+                const dots = document.getElementById('hero-dots');
+                dots.innerHTML = this.trendingList.map((_, i) => `
+                    <button onclick="app.setHero(${i}); app.startHeroRotation();" class="h-1.5 rounded-full transition-all duration-300 ${i === index ? 'w-8 bg-neonCyan' : 'w-3 bg-white/30 hover:bg-white/60'}"></button>
+                `).join('');
+            }
+
+            startHeroRotation() {
+                clearInterval(this.heroTimer);
+                this.heroTimer = setInterval(() => {
+                    if(this.currentTab !== 'home' || this.trendingList.length < 2) return;
+                    this.setHero((this.heroIndex + 1) % this.trendingList.length);
+                }, 10000);
+            }
+
+            movieCard(movie) {
+                const title = movie.title || movie.name || 'Untitled';
+                const year = (movie.release_date || movie.first_air_date || '').substring(0, 4);
+                const rating = (movie.vote_average || 0).toFixed(1);
+                const poster = movie.poster_path
+                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                    : 'https://placehold.co/500x750/080D1A/00F5FF?text=No+Poster';
+                return `
+                <div class="group cursor-pointer glass-panel rounded-2xl overflow-hidden border border-neonCyan/20 hover:border-neonCyan transition duration-300 hover:scale-105">
+                    <div onclick="app.openMovieDetails(${movie.id})" class="relative aspect-[2/3] overflow-hidden bg-gray-900">
+                        <img src="${poster}" alt="${this.escapeHtml(title)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-pureBlack via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-neonCyan text-pureBlack font-bold text-xs flex items-center gap-1">
+                                <i data-lucide="info" class="w-3 h-3"></i> View Details
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <h4 onclick="app.openMovieDetails(${movie.id})" class="text-sm font-bold text-white truncate cursor-pointer hover:text-neonCyan transition">${this.escapeHtml(title)}</h4>
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <span>${year || '—'}</span>
+                            <span class="flex items-center gap-1 text-goldCustom font-semibold"><i data-lucide="star" class="w-3 h-3 fill-goldCustom"></i> ${rating}</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button onclick="app.openDownloadSelector('${this.jsSafe(title)}')" class="flex-1 py-1.5 rounded-lg bg-neonCyan/90 text-pureBlack text-[11px] font-bold hover:glow-cyan transition flex items-center justify-center gap-1"><i data-lucide="download" class="w-3 h-3"></i> Hubs</button>
+                            <button onclick="app.csQuickSearch('${this.jsSafe(title)}')" class="flex-1 py-1.5 rounded-lg bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 text-[11px] font-bold hover:bg-emerald-400/30 transition flex items-center justify-center gap-1"><i data-lucide="clapperboard" class="w-3 h-3"></i> Subz</button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            renderMovieGrid(elementId, movies) {
+                const container = document.getElementById(elementId);
+                if (!container) return;
+                if(!movies || movies.length === 0) {
+                    container.innerHTML = `<div class="col-span-full text-center py-8 text-gray-500 text-sm">Could not load content.</div>`;
+                    return;
+                }
+                container.innerHTML = movies.map(m => this.movieCard(m)).join('');
+                lucide.createIcons();
+            }
+
+            // ================= TMDB SEARCH =================
+            handleSearchInput(event) {
+                clearTimeout(this.searchTimeout);
+                const query = event.target.value;
+                this.searchTimeout = setTimeout(() => this.performSearch(query), 400);
+            }
+
+            async triggerSearch() {
+                const query = document.getElementById('search-input').value;
+                await this.performSearch(query);
+            }
+
+            async performSearch(query) {
+                const genre = document.getElementById('genre-filter').value;
+                const sort = document.getElementById('sort-filter').value;
+                let endpoint = `/discover/movie?sort_by=${sort}`;
+                if(query) endpoint = `/search/movie?query=${encodeURIComponent(query)}`;
+                if(genre) endpoint += `&with_genres=${genre}`;
+
+                const container = document.getElementById('search-results-grid');
+                container.innerHTML = this.skeletonCards(10);
+
+                const results = await this.fetchTMDB(endpoint);
+                if(results.length === 0) {
+                    container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No cinematic results found matching your criteria.<br><span class="text-xs text-emerald-300">Tip: Try the <button onclick="app.switchTab('cinesubz')" class="underline font-bold">Cinesubz Hub</button> for Sinhala subtitled content.</span></div>`;
+                    return;
+                }
+                container.innerHTML = results.slice(0, 20).map(m => this.movieCard(m)).join('');
+                lucide.createIcons();
+            }
+
+            // ================= TMDB MOVIE DETAILS =================
+            async openMovieDetails(movieId) {
+                const modal = document.getElementById('movie-modal');
+                const content = document.getElementById('modal-content');
+                modal.classList.remove('hidden');
+                content.innerHTML = `<div class="flex flex-col items-center justify-center py-16 gap-4"><div class="spinner w-10 h-10"></div><p class="text-neonCyan font-bold animate-pulse text-sm">Loading Cinematic Experience...</p></div>`;
+
+                try {
+                    const res = await fetch(`${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&append_to_response=videos,credits,similar`);
+                    const movie = await res.json();
+                    if(!movie || movie.success === false) throw new Error('not found');
+
+                    const trailer = (movie.videos?.results || []).find(v => v.type === 'Trailer' && v.site === 'YouTube') || (movie.videos?.results || [])[0] || {};
+                    const title = movie.title || 'Untitled';
+                    const safeTitle = this.jsSafe(title);
+                    const director = (movie.credits?.crew || []).find(c => c.job === 'Director')?.name;
+
+                    content.innerHTML = `
+                        <div class="relative rounded-2xl overflow-hidden aspect-video bg-black flex items-center justify-center">
+                            ${trailer.key ? `
+                                <iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1" class="w-full h-full" allowfullscreen></iframe>
+                            ` : `
+                                <img src="${movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : 'https://placehold.co/1280x720/080D1A/00F5FF?text=No+Backdrop'}" class="w-full h-full object-cover filter brightness-75">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="px-6 py-3 rounded-xl bg-neonCyan text-pureBlack font-bold">Trailer Unavailable</span>
+                                </div>
+                            `}
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex flex-wrap items-center justify-between gap-4">
+                                <h2 class="text-3xl font-black text-white">${this.escapeHtml(title)}</h2>
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <button onclick="app.csQuickSearch('${safeTitle}'); app.closeMovieDetails();" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-neonCyan text-pureBlack text-xs font-black hover:glow-cyan transition flex items-center gap-1.5">
+                                        <i data-lucide="clapperboard" class="w-4 h-4"></i> Cinesubz (සිංහල)
+                                    </button>
+                                    <button onclick="app.openDownloadSelector('${safeTitle}')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purpleCustom to-neonCyan text-white text-xs font-bold hover:glow-purple transition flex items-center gap-1.5">
+                                        <i data-lucide="download" class="w-4 h-4"></i> Download Hub
+                                    </button>
+                                    <button onclick="app.addToWatchlist(${movie.id})" class="px-4 py-2 rounded-xl glass-panel border border-neonCyan/30 text-neonCyan text-xs font-bold hover:bg-neonCyan/10 transition flex items-center gap-1.5">
+                                        <i data-lucide="bookmark" class="w-4 h-4"></i> Watchlist
+                                    </button>
+                                    <button onclick="navigator.clipboard.writeText('${safeTitle} — CINEVERSE X'); app.toast('Movie title copied to clipboard!','success')" class="px-4 py-2 rounded-xl glass-panel border border-white/20 text-white text-xs font-bold hover:bg-white/10 transition flex items-center gap-1.5">
+                                        <i data-lucide="share-2" class="w-4 h-4"></i> Share
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-300">
+                                <span class="flex items-center gap-1 text-goldCustom font-bold"><i data-lucide="star" class="w-4 h-4 fill-goldCustom"></i> ${(movie.vote_average || 0).toFixed(1)}/10</span>
+                                <span>•</span>
+                                <span>${movie.runtime || '—'} mins</span>
+                                <span>•</span>
+                                <span>${(movie.release_date || '').substring(0, 4) || '—'}</span>
+                                <span>•</span>
+                                <span class="px-2 py-0.5 rounded bg-electricBlue/20 text-electricBlue text-xs font-semibold">${(movie.genres || []).map(g => g.name).join(', ') || 'N/A'}</span>
+                            </div>
+                            <p class="text-gray-300 text-sm leading-relaxed">${this.escapeHtml(movie.overview || 'No overview available.')}</p>
+                            <div class="pt-4 border-t border-neonCyan/20 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-gray-400">
+                                <div><strong class="text-white">Director:</strong> ${this.escapeHtml(director || 'N/A')}</div>
+                                <div><strong class="text-white">Studio:</strong> ${this.escapeHtml(movie.production_companies?.[0]?.name || 'N/A')}</div>
+                                <div><strong class="text-white">Budget:</strong> $${(movie.budget || 0).toLocaleString()}</div>
+                                <div><strong class="text-white">Box Office:</strong> $${(movie.revenue || 0).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                } catch(e) {
+                    content.innerHTML = `<div class="text-center py-16 text-redCustom font-bold">Failed to load movie details. Please try again.</div>`;
+                }
+            }
+
+            closeMovieDetails() {
+                document.getElementById('movie-modal').classList.add('hidden');
+                document.getElementById('modal-content').innerHTML = '';
+            }
+
+            // ================= CINESUBZ API HELPERS =================
+            async fetchCS(endpoint, params = {}) {
+                const url = new URL(`${CS_API_BASE}${endpoint}`);
+                Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+                url.searchParams.set('api_key', CS_API_KEY);
+                const res = await fetch(url.toString());
+                if(!res.ok) throw new Error(`Cinesubz API error: ${res.status}`);
+                return res.json();
+            }
+
+            // Defensive normalizers — API response shapes can vary
+            normalizeList(data) {
+                if(Array.isArray(data)) return data;
+                if(!data || typeof data !== 'object') return [];
+                for(const key of ['results','data','movies','posts','items','list','search']) {
+                    if(Array.isArray(data[key])) return data[key];
+                    if(data[key] && typeof data[key] === 'object') {
+                        const nested = this.normalizeList(data[key]);
+                        if(nested.length) return nested;
+                    }
+                }
+                return [data];
+            }
+
+            pick(obj, keys, fallback = '') {
+                if(!obj || typeof obj !== 'object') return fallback;
+                for(const k of keys) {
+                    if(obj[k] !== undefined && obj[k] !== null && obj[k] !== '') return obj[k];
+                }
+                return fallback;
+            }
+
+            absUrl(u = '') {
+                u = String(u);
+                if(!u) return '';
+                if(u.startsWith('http')) return u;
+                if(u.startsWith('//')) return 'https:' + u;
+                return CS_SITE + (u.startsWith('/') ? '' : '/') + u;
+            }
+
+            // ================= CINESUBZ HUB =================
+            async loadCsSpotlight() {
+                const grid = document.getElementById('cs-home-grid');
+                try {
+                    const data = await this.fetchCS('/search', { q: '2025' });
+                    const items = this.normalizeList(data).filter(m => this.pick(m, ['url','link','permalink'])).slice(0, 5);
+                    if(!items.length) { grid.innerHTML = this.csEmptyMini(); return; }
+                    grid.innerHTML = items.map((m, i) => this.csCard(m, i)).join('');
+                    lucide.createIcons();
+                } catch(e) {
+                    grid.innerHTML = this.csEmptyMini();
+                }
+            }
+
+            csEmptyMini() {
+                return `<div class="col-span-full glass-panel rounded-2xl border border-emerald-400/20 p-6 text-center text-sm text-gray-400">
+                    Cinesubz API momentarily unreachable — <button onclick="app.switchTab('cinesubz')" class="text-emerald-300 underline font-bold">open Cinesubz Hub</button> to search directly.
+                </div>`;
+            }
+
+            csTypeChange() {
+                this.csType = document.querySelector('input[name="cs-type"]:checked')?.value || 'movie';
+                const input = document.getElementById('cs-search-input');
+                if(input.value.trim()) this.csSearch();
+            }
+
+            csQuickChip(q) {
+                document.getElementById('cs-search-input').value = q;
+                this.csSearch();
+            }
+
+            csQuickSearch(title) {
+                this.switchTab('cinesubz');
+                document.querySelector('input[name="cs-type"][value="movie"]').checked = true;
+                this.csType = 'movie';
+                document.getElementById('cs-search-input').value = title;
+                this.csSearch();
+                this.toast(`Searching Cinesubz for "${title}"...`, 'info');
+            }
+
+            async csSearch() {
+                const q = document.getElementById('cs-search-input').value.trim();
+                const grid = document.getElementById('cs-results-grid');
+                const label = document.getElementById('cs-results-label');
+                const count = document.getElementById('cs-results-count');
+                if(!q) { this.toast('මුලින් movie / TV show එකක නම type කරන්න', 'warn'); return; }
+
+                this.csType = document.querySelector('input[name="cs-type"]:checked')?.value || 'movie';
+                grid.innerHTML = this.skeletonCards(10);
+                label.innerText = `Searching "${q}" on Cinesubz...`;
+                count.innerText = '';
+
+                try {
+                    const endpoint = this.csType === 'tv' ? '/tv/search' : '/search';
+                    const data = await this.fetchCS(endpoint, { q });
+                    const items = this.normalizeList(data).map((m, i) => ({ _idx: i, ...m }))
+                        .filter(m => this.pick(m, ['url','link','permalink','post_url']));
+                    this.csResults = items;
+
+                    if(!items.length) {
+                        grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-400 space-y-3">
+                            <i data-lucide="search-x" class="w-12 h-12 mx-auto text-emerald-400/40"></i>
+                            <p>No Cinesubz results for "<strong class="text-white">${this.escapeHtml(q)}</strong>".</p>
+                            <a href="${CS_SITE}/?s=${encodeURIComponent(q)}" target="_blank" class="text-xs text-emerald-300 underline font-bold">Search on cinesubz.lk directly</a>
+                        </div>`;
+                        lucide.createIcons();
+                        label.innerText = 'No results';
+                        return;
+                    }
+
+                    label.innerText = `Cinesubz results for "${q}"`;
+                    count.innerText = `${items.length} item${items.length > 1 ? 's' : ''} • ${this.csType === 'tv' ? 'TV Shows' : 'Movies'}`;
+                    grid.innerHTML = items.map((m, i) => this.csCard(m, i)).join('');
+                    lucide.createIcons();
+                } catch(e) {
+                    grid.innerHTML = `<div class="col-span-full text-center py-16 text-gray-400 space-y-3">
+                        <i data-lucide="wifi-off" class="w-12 h-12 mx-auto text-redCustom/50"></i>
+                        <p>Cinesubz API connection failed.</p>
+                        <button onclick="app.csSearch()" class="px-5 py-2 rounded-xl bg-emerald-400 text-pureBlack text-xs font-black">Retry</button>
+                    </div>`;
+                    lucide.createIcons();
+                    label.innerText = 'Connection error';
+                    this.toast('Cinesubz API එකට connect වෙන්න බැරි වුණා. ආයෙ try කරන්න.', 'error');
+                }
+            }
+
+            csCard(m, idx) {
+                const title = this.pick(m, ['title','name','post_title','movie_name'], 'Untitled');
+                const url = this.absUrl(this.pick(m, ['url','link','permalink','post_url']));
+                const img = this.absUrl(this.pick(m, ['image','img','poster','thumbnail','featured_image','image_url']));
+                const type = this.pick(m, ['type','post_type'], this.csType);
+                const date = this.pick(m, ['date','published','year','release_date'], '');
+                const isTv = type === 'tv' || /tvshows|tv-show|\/tv\//i.test(url);
+                const badge = isTv
+                    ? `<span class="px-2 py-0.5 rounded bg-electricBlue/25 text-electricBlue text-[9px] font-black uppercase tracking-wider">TV</span>`
+                    : `<span class="px-2 py-0.5 rounded bg-emerald-400/25 text-emerald-300 text-[9px] font-black uppercase tracking-wider">Movie</span>`;
+                const poster = img || 'https://placehold.co/500x750/06120c/34d399?text=Cinesubz';
+                return `
+                <div class="group cursor-pointer glass-panel rounded-2xl overflow-hidden border border-emerald-400/20 hover:border-emerald-400 transition duration-300 hover:scale-105">
+                    <div onclick="app.openCsDetails(${idx})" class="relative aspect-[2/3] overflow-hidden bg-gray-900">
+                        <img src="${poster}" alt="${this.escapeHtml(title)}" loading="lazy" onerror="this.src='https://placehold.co/500x750/06120c/34d399?text=Cinesubz'" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute top-2 left-2">${badge}</div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-pureBlack via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3">
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-400 text-pureBlack font-bold text-xs flex items-center gap-1">
+                                <i data-lucide="download" class="w-3 h-3"></i> Get Links
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <h4 onclick="app.openCsDetails(${idx})" class="text-sm font-bold text-white truncate cursor-pointer hover:text-emerald-300 transition">${this.escapeHtml(title)}</h4>
+                        <div class="flex items-center justify-between text-[11px] text-gray-400">
+                            <span class="truncate">${this.escapeHtml(String(date))}</span>
+                            <span class="text-emerald-300 font-semibold shrink-0">සිංහල උපසිරැසි</span>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            async openCsDetails(idx) {
+                const m = (this.csResults || [])[idx];
+                if(!m) return;
+                const title = this.pick(m, ['title','name','post_title','movie_name'], 'Untitled');
+                const url = this.absUrl(this.pick(m, ['url','link','permalink','post_url']));
+                const img = this.absUrl(this.pick(m, ['image','img','poster','thumbnail','featured_image','image_url']));
+                const isTv = this.pick(m, ['type','post_type'], this.csType) === 'tv' || /tvshows|\/tv\//i.test(url);
+
+                // Track recently viewed
+                this.pushRecent({ title, img, url, type: isTv ? 'tv' : 'movie' });
+
+                const modal = document.getElementById('cs-modal');
+                const content = document.getElementById('cs-modal-content');
+                modal.classList.remove('hidden');
+                content.innerHTML = `<div class="flex flex-col items-center justify-center py-16 gap-4"><div class="spinner w-10 h-10"></div><p class="text-emerald-300 font-bold animate-pulse text-sm">Fetching ${isTv ? 'episode' : 'download'} links from Cinesubz...</p></div>`;
+
+                try {
+                    if(isTv) {
+                        await this.renderCsTv(content, url, title, img);
+                    } else {
+                        await this.renderCsMovie(content, url, title, img);
+                    }
+                    lucide.createIcons();
+                } catch(e) {
+                    content.innerHTML = `<div class="text-center py-10 space-y-4">
+                        <p class="text-redCustom font-bold">Cinesubz API request failed.</p>
+                        <a href="${url}" target="_blank" class="px-5 py-2.5 rounded-xl bg-emerald-400 text-pureBlack text-xs font-black inline-flex items-center gap-2">Open on cinesubz.lk <i data-lucide="external-link" class="w-4 h-4"></i></a>
+                    </div>`;
+                    lucide.createIcons();
+                }
+            }
+
+            csLinkButton(link, i) {
+                const label = this.escapeHtml(this.pick(link, ['name','label','quality','title','text','server'], `Link ${i+1}`));
+                const url = this.absUrl(this.pick(link, ['url','link','href','zt_link','download_url']));
+                const isZt = /zt-links|ztlink/i.test(url);
+                if(isZt) {
+                    return `<button id="cs-link-${i}" onclick="app.resolveCsLink('${this.jsSafe(url)}', ${i})" class="p-3.5 rounded-xl glass-panel border border-goldCustom/40 text-goldCustom font-bold text-xs flex items-center justify-between transition hover:bg-goldCustom/10">
+                        <span class="flex items-center gap-2 truncate"><i data-lucide="zap" class="w-4 h-4 shrink-0"></i> ${label}</span>
+                        <span class="shrink-0 text-[9px] uppercase tracking-wider bg-goldCustom/15 px-2 py-0.5 rounded">Resolve</span>
+                    </button>`;
+                }
+                return `<a href="${url}" target="_blank" class="p-3.5 rounded-xl glass-panel border border-emerald-400/40 text-emerald-300 font-bold text-xs flex items-center justify-between transition hover:bg-emerald-400/10">
+                    <span class="flex items-center gap-2 truncate"><i data-lucide="download" class="w-4 h-4 shrink-0"></i> ${label}</span>
+                    <i data-lucide="external-link" class="w-4 h-4 shrink-0"></i>
+                </a>`;
+            }
+
+            extractCsLinks(data) {
+                if(!data || typeof data !== 'object') return [];
+                for(const key of ['download_links','dl_links','links','downloads','dl','episodes','episode_list','data']) {
+                    if(Array.isArray(data[key]) && data[key].length) return data[key];
+                }
+                return [];
+            }
+
+            async renderCsMovie(content, url, title, img) {
+                const data = await this.fetchCS('/infodl', { q: url });
+                const info = (data && !Array.isArray(data) && (data.data && typeof data.data === 'object' && !Array.isArray(data.data))) ? { ...data, ...data.data } : data;
+                const desc = this.pick(info, ['description','content','overview','sinhala_description','summary'], '');
+                const links = this.extractCsLinks(data);
+
+                content.innerHTML = `
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <img src="${img || 'https://placehold.co/500x750/06120c/34d399?text=Cinesubz'}" onerror="this.src='https://placehold.co/500x750/06120c/34d399?text=Cinesubz'" class="w-40 sm:w-44 rounded-2xl object-cover aspect-[2/3] border border-emerald-400/30 mx-auto sm:mx-0" alt="${this.escapeHtml(title)}">
+                        <div class="flex-1 space-y-4 min-w-0">
+                            <div>
+                                <span class="px-2 py-0.5 rounded bg-emerald-400/20 text-emerald-300 text-[10px] font-black uppercase tracking-wider">Movie • Sinhala Subtitles</span>
+                                <h2 class="text-2xl sm:text-3xl font-black text-white mt-2 break-words">${this.escapeHtml(title)}</h2>
+                            </div>
+                            ${desc ? `<p class="text-gray-300 text-sm leading-relaxed line-clamp-3">${this.escapeHtml(String(desc).replace(/<[^>]*>/g, '').substring(0, 400))}</p>` : ''}
+                            <div class="flex flex-wrap gap-2">
+                                <a href="${url}" target="_blank" class="px-4 py-2 rounded-xl glass-panel border border-white/20 text-white text-xs font-bold hover:bg-white/10 transition flex items-center gap-1.5"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Source Page</a>
+                                <button onclick="app.csCopy('${this.jsSafe(title)}')" class="px-4 py-2 rounded-xl glass-panel border border-neonCyan/30 text-neonCyan text-xs font-bold hover:bg-neonCyan/10 transition flex items-center gap-1.5"><i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Title</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3 pt-2 border-t border-emerald-400/20">
+                        <h3 class="text-sm font-black text-emerald-300 uppercase tracking-wider flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Download Links</h3>
+                        ${links.length
+                            ? `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${links.map((l, i) => this.csLinkButton(l, i)).join('')}</div>
+                               <p class="text-[10px] text-gray-500">Gold buttons = zt-links — click කරොත් API එකෙන් direct link එක resolve වෙලා open වෙනවා.</p>`
+                            : `<div class="text-center py-8 text-gray-400 text-sm space-y-3">
+                                <p>No direct links returned by the API for this title.</p>
+                                <a href="${url}" target="_blank" class="px-5 py-2.5 rounded-xl bg-emerald-400 text-pureBlack text-xs font-black inline-flex items-center gap-2">Open source page <i data-lucide="external-link" class="w-4 h-4"></i></a>
+                               </div>`}
+                    </div>
+                `;
+            }
+
+            async renderCsTv(content, url, title, img) {
+                const data = await this.fetchCS('/tv/info', { q: url });
+                const info = (data && data.data && typeof data.data === 'object' && !Array.isArray(data.data)) ? { ...data, ...data.data } : data;
+                const desc = this.pick(info, ['description','content','overview','summary'], '');
+                let episodes = this.extractCsLinks(data);
+                if(!episodes.length) {
+                    const eps = this.pick(info, ['episodes','episode_list','ep_list'], []);
+                    if(Array.isArray(eps)) episodes = eps;
+                }
+
+                content.innerHTML = `
+                    <div class="flex flex-col sm:flex-row gap-6">
+                        <img src="${img || 'https://placehold.co/500x750/06120c/34d399?text=TV+Series'}" onerror="this.src='https://placehold.co/500x750/06120c/34d399?text=TV+Series'" class="w-40 sm:w-44 rounded-2xl object-cover aspect-[2/3] border border-electricBlue/30 mx-auto sm:mx-0" alt="${this.escapeHtml(title)}">
+                        <div class="flex-1 space-y-4 min-w-0">
+                            <div>
+                                <span class="px-2 py-0.5 rounded bg-electricBlue/20 text-electricBlue text-[10px] font-black uppercase tracking-wider">TV Series • Sinhala Subtitles</span>
+                                <h2 class="text-2xl sm:text-3xl font-black text-white mt-2 break-words">${this.escapeHtml(title)}</h2>
+                            </div>
+                            ${desc ? `<p class="text-gray-300 text-sm leading-relaxed line-clamp-3">${this.escapeHtml(String(desc).replace(/<[^>]*>/g, '').substring(0, 400))}</p>` : ''}
+                            <a href="${url}" target="_blank" class="px-4 py-2 rounded-xl glass-panel border border-white/20 text-white text-xs font-bold hover:bg-white/10 transition inline-flex items-center gap-1.5"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Source Page</a>
+                        </div>
+                    </div>
+                    <div class="space-y-3 pt-2 border-t border-electricBlue/20">
+                        <h3 class="text-sm font-black text-electricBlue uppercase tracking-wider flex items-center gap-2"><i data-lucide="list-video" class="w-4 h-4"></i> Episodes</h3>
+                        ${episodes.length
+                            ? `<div id="cs-episodes" class="space-y-2 max-h-72 overflow-y-auto pr-1">${episodes.map((ep, i) => this.csEpisodeRow(ep, i)).join('')}</div>`
+                            : `<div class="text-center py-8 text-gray-400 text-sm">No episode list returned. <a href="${url}" target="_blank" class="text-electricBlue underline font-bold">Open source page</a></div>`}
+                    </div>
+                `;
+            }
+
+            csEpisodeRow(ep, i) {
+                const label = this.escapeHtml(this.pick(ep, ['name','title','label','episode','text'], `Episode ${i+1}`));
+                const url = this.absUrl(this.pick(ep, ['url','link','href','episode_url']));
+                return `<div class="glass-panel border border-electricBlue/20 rounded-xl p-3 flex items-center justify-between gap-3">
+                    <span class="text-xs font-semibold text-gray-200 truncate"><span class="text-electricBlue font-black mr-2">${String(i+1).padStart(2,'0')}</span>${label}</span>
+                    <button onclick="app.loadCsEpisodeLinks('${this.jsSafe(url)}', ${i})" class="shrink-0 px-3 py-1.5 rounded-lg bg-electricBlue/20 border border-electricBlue/40 text-electricBlue text-[10px] font-black uppercase tracking-wider hover:bg-electricBlue/30 transition">Get Links</button>
+                </div>
+                <div id="cs-ep-links-${i}" class="hidden pl-4 grid grid-cols-1 sm:grid-cols-2 gap-2"></div>`;
+            }
+
+            async loadCsEpisodeLinks(epUrl, i) {
+                const box = document.getElementById(`cs-ep-links-${i}`);
+                if(!box || !epUrl) return;
+                box.classList.remove('hidden');
+                box.innerHTML = `<div class="col-span-full flex items-center gap-2 text-xs text-electricBlue py-2"><div class="spinner w-4 h-4 !border-2"></div> Fetching episode download links...</div>`;
+                try {
+                    const data = await this.fetchCS('/tv/dl', { q: epUrl });
+                    const links = this.extractCsLinks(data);
+                    if(!links.length) {
+                        box.innerHTML = `<div class="col-span-full text-xs text-gray-400 py-2">No links returned — <a href="${epUrl}" target="_blank" class="text-electricBlue underline">open episode page</a></div>`;
+                        return;
+                    }
+                    box.innerHTML = links.map((l, li) => this.csLinkButton(l, `e${i}_${li}`)).join('');
+                    lucide.createIcons();
+                } catch(e) {
+                    box.innerHTML = `<div class="col-span-full text-xs text-redCustom py-2">Failed to load links.</div>`;
+                }
+            }
+
+            async resolveCsLink(ztUrl, idSuffix) {
+                const btn = document.getElementById(`cs-link-${idSuffix}`);
+                if(btn) { btn.innerHTML = `<span class="flex items-center gap-2"><span class="spinner w-4 h-4 !border-2"></span> Resolving direct link...</span>`; }
+                try {
+                    const data = await this.fetchCS('/resolve', { url: ztUrl });
+                    let direct = this.pick(data, ['url','direct_url','download_url','link','resolved_url','final_url']);
+                    if(!direct && data && typeof data === 'object') {
+                        const nested = this.pick(data, ['data','result'], null);
+                        if(nested) direct = this.pick(nested, ['url','direct_url','download_url','link'], '');
+                    }
+                    if(direct) {
+                        if(btn) { btn.innerHTML = `<span class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4"></i> Resolved — opening...</span>`; btn.classList.add('!border-emerald-400','!text-emerald-300'); lucide.createIcons(); }
+                        this.toast('Direct link resolved! New tab එකේ open වෙනවා 🚀', 'success');
+                        navigator.clipboard?.writeText(direct).catch(() => {});
+                        window.open(direct, '_blank');
+                    } else {
+                        throw new Error('no url');
+                    }
+                } catch(e) {
+                    if(btn) { btn.innerHTML = `<span class="flex items-center gap-2"><i data-lucide="external-link" class="w-4 h-4"></i> Resolve failed — open zt-link</span>`; btn.setAttribute('onclick', `window.open('${this.jsSafe(ztUrl)}','_blank')`); lucide.createIcons(); }
+                    this.toast('Resolve වුණේ නෑ — zt-link එක directly open කළා.', 'warn');
+                }
+            }
+
+            closeCsDetails() {
+                document.getElementById('cs-modal').classList.add('hidden');
+                document.getElementById('cs-modal-content').innerHTML = '';
+            }
+
+            csCopy(text) {
+                navigator.clipboard.writeText(text).then(() => this.toast('Copied to clipboard!', 'success'));
+            }
+
+            async checkCsApi() {
+                const el = document.getElementById('admin-api-status');
+                el.innerText = 'Pinging...';
+                try {
+                    await this.fetchCS('/search', { q: 'test' });
+                    el.innerText = 'Online ✅';
+                    this.toast('Cinesubz API is online and responding ✅', 'success');
+                } catch(e) {
+                    el.innerText = 'Offline ❌';
+                    this.toast('Cinesubz API did not respond.', 'error');
+                }
+            }
+
+            // ================= RECENTLY VIEWED =================
+            pushRecent(item) {
+                this.recent = this.recent.filter(r => r.url !== item.url);
+                this.recent.unshift(item);
+                this.recent = this.recent.slice(0, 10);
+                localStorage.setItem('cineverse_recent', JSON.stringify(this.recent));
+                this.renderRecent();
+            }
+
+            renderRecent() {
+                const section = document.getElementById('recent-section');
+                const grid = document.getElementById('recent-grid');
+                if(!this.recent.length) { section.classList.add('hidden'); return; }
+                section.classList.remove('hidden');
+                grid.innerHTML = this.recent.map((r, i) => `
+                    <div onclick="app.openCsRecent(${i})" class="group cursor-pointer glass-panel rounded-2xl overflow-hidden border border-electricBlue/20 hover:border-electricBlue transition duration-300 hover:scale-105">
+                        <div class="relative aspect-[2/3] overflow-hidden bg-gray-900">
+                            <img src="${r.img || 'https://placehold.co/500x750/080D1A/00A8FF?text=Recent'}" onerror="this.src='https://placehold.co/500x750/080D1A/00A8FF?text=Recent'" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <span class="absolute top-2 left-2 px-2 py-0.5 rounded ${r.type === 'tv' ? 'bg-electricBlue/25 text-electricBlue' : 'bg-emerald-400/25 text-emerald-300'} text-[9px] font-black uppercase">${r.type === 'tv' ? 'TV' : 'Movie'}</span>
+                        </div>
+                        <div class="p-3"><h4 class="text-sm font-bold text-white truncate">${this.escapeHtml(r.title)}</h4></div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            }
+
+            openCsRecent(i) {
+                const r = this.recent[i];
+                if(!r) return;
+                this.csResults = [{ title: r.title, url: r.url, image: r.img, type: r.type }];
+                this.openCsDetails(0);
+            }
+
+            clearRecent() {
+                this.recent = [];
+                localStorage.removeItem('cineverse_recent');
+                this.renderRecent();
+                this.toast('Recently viewed history cleared.', 'info');
+            }
+
+            // ================= MULTI-SITE DOWNLOAD SELECTOR =================
+            openDownloadSelector(movieTitle) {
+                const modal = document.getElementById('download-modal');
+                document.getElementById('download-movie-title').innerText = movieTitle;
+                const listEl = document.getElementById('download-links-list');
+                const encoded = encodeURIComponent(movieTitle);
+
+                const sources = [
+                    { name: 'Cinesubz.lk', url: `https://cinesubz.lk/?s=${encoded}`, color: 'border-emerald-400/40 text-emerald-300 hover:bg-emerald-400/10' },
+                    { name: 'Cineru', url: `https://cineru.lk/?s=${encoded}`, color: 'border-electricBlue/40 text-electricBlue hover:bg-electricBlue/10' },
+                    { name: 'SinhalaSub', url: `https://sinhalasub.lk/?s=${encoded}`, color: 'border-purpleCustom/40 text-purpleCustom hover:bg-purpleCustom/10' },
+                    { name: 'LKSub', url: `https://lksub.com/?s=${encoded}`, color: 'border-goldCustom/40 text-goldCustom hover:bg-goldCustom/10' },
+                    { name: 'DinkaMovies', url: `https://dinkamovies.com/?s=${encoded}`, color: 'border-redCustom/40 text-redCustom hover:bg-redCustom/10' },
+                    { name: 'DubLK', url: `https://dublk.com/?s=${encoded}`, color: 'border-neonCyan/40 text-neonCyan hover:bg-neonCyan/10' },
+                    { name: 'PupilsVideoBlogspot', url: `https://pupilsvideoblogspot.com/search?q=${encoded}`, color: 'border-electricBlue/40 text-electricBlue hover:bg-electricBlue/10' },
+                ];
+
+                listEl.innerHTML = sources.map(src => `
+                    <a href="${src.url}" target="_blank" class="p-3 rounded-xl glass-panel border ${src.color} font-bold text-xs flex items-center justify-between transition duration-200">
+                        <span>${src.name}</span>
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </a>
+                `).join('');
+
+                modal.classList.remove('hidden');
+                lucide.createIcons();
+            }
+
+            closeDownloadSelector() {
+                document.getElementById('download-modal').classList.add('hidden');
+            }
+
+            // ================= WATCHLIST =================
+            async addToWatchlist(movieId) {
+                try {
+                    const res = await fetch(`${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}`);
+                    const movie = await res.json();
+                    if(!this.watchlist.some(m => m.id === movie.id)) {
+                        this.watchlist.push(movie);
+                        localStorage.setItem('cineverse_watchlist', JSON.stringify(this.watchlist));
+                        this.toast(`"${this.escapeHtml(movie.title)}" added to your watchlist!`, 'success');
+                        this.renderWatchlist();
+                        this.updateWatchlistBadge();
+                    } else {
+                        this.toast(`"${this.escapeHtml(movie.title)}" is already in your watchlist.`, 'warn');
+                    }
+                } catch(e) {
+                    this.toast('Failed to add to watchlist.', 'error');
+                }
+            }
+
+            updateWatchlistBadge() {
+                const badge = document.getElementById('watchlist-count');
+                if(!badge) return;
+                if(this.watchlist.length > 0) {
+                    badge.innerText = this.watchlist.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            renderWatchlist() {
+                const container = document.getElementById('watchlist-grid');
+                if(!container) return;
+                if(this.watchlist.length === 0) {
+                    container.innerHTML = `<div class="col-span-full text-center py-16 text-gray-500">Your watchlist is currently empty. Explore and add movies!</div>`;
+                    return;
+                }
+                container.innerHTML = this.watchlist.map(movie => {
+                    const title = this.jsSafe(movie.title || '');
+                    return `
+                    <div class="group glass-panel rounded-2xl overflow-hidden border border-neonCyan/20 relative">
+                        <div onclick="app.openMovieDetails(${movie.id})" class="aspect-[2/3] overflow-hidden bg-gray-900 cursor-pointer">
+                            <img src="${movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://placehold.co/500x750/080D1A/00F5FF?text=No+Poster'}" alt="${this.escapeHtml(movie.title || '')}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        </div>
+                        <div class="p-3 space-y-2">
+                            <h4 class="text-sm font-bold text-white truncate">${this.escapeHtml(movie.title || '')}</h4>
+                            <button onclick="app.csQuickSearch('${title}')" class="w-full py-1.5 rounded-lg bg-emerald-400 text-pureBlack text-xs font-black hover:glow-cyan transition">Cinesubz (සිංහල)</button>
+                            <button onclick="app.openDownloadSelector('${title}')" class="w-full py-1.5 rounded-lg bg-neonCyan/90 text-pureBlack text-xs font-bold hover:glow-cyan transition">Download Hub</button>
+                            <button onclick="app.removeFromWatchlist(${movie.id})" class="w-full py-1.5 rounded-lg border border-redCustom/30 text-redCustom text-xs font-bold hover:bg-redCustom/10 transition">Remove</button>
+                        </div>
+                    </div>
+                `;}).join('');
+                lucide.createIcons();
+            }
+
+            removeFromWatchlist(movieId) {
+                this.watchlist = this.watchlist.filter(m => m.id !== movieId);
+                localStorage.setItem('cineverse_watchlist', JSON.stringify(this.watchlist));
+                this.renderWatchlist();
+                this.updateWatchlistBadge();
+                this.toast('Removed from watchlist.', 'info');
+            }
+
+            clearWatchlist() {
+                this.watchlist = [];
+                localStorage.removeItem('cineverse_watchlist');
+                this.renderWatchlist();
+                this.updateWatchlistBadge();
+                this.toast('Watchlist cleared.', 'info');
+            }
+
+            exportWatchlist() {
+                if(!this.watchlist.length) { this.toast('Watchlist is empty — nothing to export.', 'warn'); return; }
+                const data = JSON.stringify(this.watchlist.map(m => ({ id: m.id, title: m.title, year: (m.release_date || '').substring(0,4) })), null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'cineverse-watchlist.json';
+                a.click();
+                this.toast('Watchlist exported as JSON!', 'success');
+            }
+
+            // ================= CINE AI =================
+            async handleAiSubmit() {
+                const input = document.getElementById('ai-input');
+                const chatBox = document.getElementById('ai-chat-box');
+                const prompt = input.value.trim();
+                if(!prompt) return;
+
+                chatBox.innerHTML += `
+                    <div class="flex items-end justify-end space-x-3">
+                        <div class="p-4 rounded-2xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack max-w-lg text-sm font-semibold">
+                            ${this.escapeHtml(prompt)}
+                        </div>
+                    </div>
+                `;
+                input.value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Typing indicator
+                chatBox.innerHTML += `
+                    <div id="ai-typing" class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-neonCyan/20 flex items-center justify-center shrink-0">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i>
+                        </div>
+                        <div class="p-4 rounded-2xl glass-panel border border-neonCyan/20 flex gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-neonCyan animate-bounce"></span>
+                            <span class="w-2 h-2 rounded-full bg-neonCyan animate-bounce" style="animation-delay:.15s"></span>
+                            <span class="w-2 h-2 rounded-full bg-neonCyan animate-bounce" style="animation-delay:.3s"></span>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                setTimeout(async () => {
+                    document.getElementById('ai-typing')?.remove();
+                    let aiReply = "Based on your cinematic inquiry, I recommend exploring our top-rated Sci-Fi and Action masterpieces in the Explore tab crafted for elite cinephiles!";
+                    let csQuery = null;
+                    const pLower = prompt.toLowerCase();
+                    if(pLower.includes('sci-fi') || pLower.includes('mind-bending')) {
+                        aiReply = "🧠 <strong>CINE AI Recommendation</strong>: <em>Interstellar</em> (2014) or <em>Inception</em> (2010). Both feature breathtaking scores, complex narrative depth, and mind-bending space-time dimensions.";
+                        csQuery = 'Interstellar';
+                    } else if(pLower.includes('action') || pLower.includes('thriller')) {
+                        aiReply = "🔥 <strong>CINE AI Recommendation</strong>: <em>Mad Max: Fury Road</em> (2015) or <em>John Wick: Chapter 4</em>. Relentless high-octane pacing with jaw-dropping stunt choreography.";
+                        csQuery = 'John Wick';
+                    } else if(pLower.includes('animation') || pLower.includes('animated')) {
+                        aiReply = "✨ <strong>CINE AI Recommendation</strong>: <em>Spirited Away</em> or <em>Spider-Man: Across the Spider-Verse</em>. Masterclass visual artistry and emotional depth.";
+                        csQuery = 'Spider-Man';
+                    } else if(pLower.includes('සිංහල') || pLower.includes('sinhala') || pLower.includes('sub')) {
+                        aiReply = "🇱🇰 <strong>CINE AI</strong>: සිංහල උපසිරැසි movies සඳහා <strong>Cinesubz Hub</strong> tab එක open කරලා search කරන්න — live API එකෙන් direct download links ලැබෙනවා, zt-links auto-resolve වෙනවා!";
+                    }
+
+                    chatBox.innerHTML += `
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-neonCyan/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i>
+                            </div>
+                            <div class="p-4 rounded-2xl glass-panel max-w-lg text-sm text-gray-200 border border-neonCyan/20">
+                                ${aiReply}
+                                ${csQuery ? `<button onclick="app.csQuickSearch('${csQuery}')" class="mt-3 px-4 py-2 rounded-xl bg-emerald-400 text-pureBlack text-xs font-black flex items-center gap-1.5"><i data-lucide="clapperboard" class="w-3.5 h-3.5"></i> Find "${csQuery}" on Cinesubz</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    lucide.createIcons();
+                }, 900);
+            }
+
+            sendAiPrompt(text) {
+                document.getElementById('ai-input').value = text;
+                this.handleAiSubmit();
+            }
+
+            // ================= AUTH =================
+            openAuthModal() {
+                document.getElementById('auth-modal').classList.remove('hidden');
+            }
+
+            closeAuthModal() {
+                document.getElementById('auth-modal').classList.add('hidden');
+            }
+
+            handleAuth() {
+                const email = document.getElementById('auth-email').value.trim();
+                const pass = document.getElementById('auth-password').value;
+                if(!email || !email.includes('@')) {
+                    this.toast('Please enter a valid email address.', 'warn');
+                    return;
+                }
+                if(pass.length < 4) {
+                    this.toast('Password must be at least 4 characters (demo auth).', 'warn');
+                    return;
+                }
+                this.user = { email };
+                localStorage.setItem('cineverse_user', JSON.stringify(this.user));
+                this.updateAuthUI();
+                this.closeAuthModal();
+                this.toast(`Welcome aboard, ${email.split('@')[0]}! 🎬`, 'success');
+            }
+
+            updateAuthUI() {
+                const btnText = document.getElementById('auth-btn-text');
+                if(this.user) {
+                    btnText.innerText = this.user.email.split('@')[0];
+                }
+            }
+        }
+
+        const app = new CineverseApp();
+    </script>
+</body>
+</html>
